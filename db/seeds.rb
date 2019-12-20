@@ -5,6 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+CorrectAnswer.destroy_all
 Question.destroy_all
 Category.destroy_all
 
@@ -20,10 +21,15 @@ data.map do |question|
         category = Category.find_by(name: question["category"])
     end 
 
-    Question.create(
+    database_question = Question.create(
         answer_type: question["type"],
         difficulty: question["difficulty"],
         message: question["question"],
         category: category
+    )
+
+    CorrectAnswer.create(
+        message: question["correct_answer"],
+        question: database_question
     )
 end 
