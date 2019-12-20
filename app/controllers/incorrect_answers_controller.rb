@@ -8,4 +8,27 @@ class IncorrectAnswersController < ApplicationController
         incorrect_answer = IncorrectAnswer.find(params[:id])
         render json: incorrect_answer, include: [:question => {only: [:id, :message]}]
     end 
+
+    # def create 
+    #     incorrect_answer = IncorrectAnswer.create(
+    #         message: params[:message],
+    #         question_id: params[:question_id]
+    #     )
+    #     render json: incorrect_answer, include: [:question => {only: [:id, :message]}]
+    # end 
+
+    # def update 
+    #     incorrect_answer = IncorrectAnswer.find(params[:id])
+    #     incorrect_answer.update(
+    #         message: params[:message],
+    #         question_id: params[:question_id]
+    #     )
+    #     render json: incorrect_answer, include: [:question => {only: [:id, :message]}]
+    # end 
+
+    # def destroy 
+    #     incorrect_answer = IncorrectAnswer.find(params[:id])
+    #     incorrect_answer.destroy()
+    #     render json: {message:"This answer has been destroyed." , status: 204}
+    # end 
 end
