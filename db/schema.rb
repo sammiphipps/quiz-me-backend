@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_20_154104) do
+ActiveRecord::Schema.define(version: 2019_12_20_155358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,14 @@ ActiveRecord::Schema.define(version: 2019_12_20_154104) do
     t.index ["question_id"], name: "index_correct_answers_on_question_id"
   end
 
+  create_table "incorrect_answers", force: :cascade do |t|
+    t.string "message"
+    t.bigint "question_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_incorrect_answers_on_question_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "answer_type"
     t.string "difficulty"
@@ -40,5 +48,6 @@ ActiveRecord::Schema.define(version: 2019_12_20_154104) do
   end
 
   add_foreign_key "correct_answers", "questions"
+  add_foreign_key "incorrect_answers", "questions"
   add_foreign_key "questions", "categories"
 end

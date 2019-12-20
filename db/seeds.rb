@@ -32,4 +32,11 @@ data.map do |question|
         message: question["correct_answer"],
         question: database_question
     )
+
+    question["incorrect_answers"].map do |incorrect_answer|
+        IncorrectAnswer.create(
+            message: incorrect_answer,
+            question: database_question
+        )
+    end 
 end 
