@@ -10,34 +10,36 @@ CorrectAnswer.destroy_all
 Question.destroy_all
 Category.destroy_all
 
-opentdb = 'https://opentdb.com/api.php?amount=10'
-request = RestClient.get(opentdb)
-response = JSON.parse(request)
-data = response["results"]
+opentdbApis = ["https://opentdb.com/api.php?amount=10&category=9&type=multiple", "https://opentdb.com/api.php?amount=10&category=9&type=boolean", "https://opentdb.com/api.php?amount=10&category=18&type=multiple", "https://opentdb.com/api.php?amount=10&category=18&type=boolean", "https://opentdb.com/api.php?amount=10&category=19&type=multiple", "https://opentdb.com/api.php?amount=10&category=19&type=boolean", "https://opentdb.com/api.php?amount=10&category=22&type=multiple", "https://opentdb.com/api.php?amount=10&category=22&type=boolean"]
+opentdbApis.map do |opentdb|
+    request = RestClient.get(opentdb)
+    response = JSON.parse(request)
+    data = response["results"]
 
-data.map do |question|
-    if Category.all.include?(question["category"]) == false 
-        category = Category.create(name: question["category"])
-    else 
-        category = Category.find_by(name: question["category"])
-    end 
+    data.map do |question|
 
-    database_question = Question.create(
-        answer_type: question["type"],
-        difficulty: question["difficulty"],
-        message: question["question"],
-        category: category
-    )
+        if Category.find_by(name: question["category"]) 
+            category = Category.find_by(name: question["category"])
+        else 
+            category = Category.create(name: question["category"])
+        end 
 
-    CorrectAnswer.create(
-        message: question["correct_answer"],
-        question: database_question
-    )
+        database_question = Question.create(
+            answer_type: question["type"],
+            message: question["question"],
+            category: category
+        )
 
-    question["incorrect_answers"].map do |incorrect_answer|
-        IncorrectAnswer.create(
-            message: incorrect_answer,
+        CorrectAnswer.create(
+            message: question["correct_answer"],
             question: database_question
         )
+
+        question["incorrect_answers"].map do |incorrect_answer|
+            IncorrectAnswer.create(
+                message: incorrect_answer,
+                question: database_question
+            )
+        end 
     end 
 end 
