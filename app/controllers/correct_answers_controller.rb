@@ -1,12 +1,12 @@
 class CorrectAnswersController < ApplicationController
     def index 
         correct_answers = CorrectAnswer.all
-        render json: correct_answers, include: [:question => {only: [:id, :message]}]
+        render json: correct_answers, include: [:question => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def show 
         correct_answer = CorrectAnswer.find(params[:id])
-        render json: correct_answer, include: [:question => {only: [:id, :message]}]
+        render json: correct_answer, include: [:question => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def create 
@@ -14,7 +14,7 @@ class CorrectAnswersController < ApplicationController
             message: params[:message],
             question_id: params[:question_id]
         )
-        render json: correct_answer, include: [:question => {only: [:id, :message]}]
+        render json: correct_answer, include: [:question => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def update 
@@ -23,7 +23,7 @@ class CorrectAnswersController < ApplicationController
             message: params[:message],
             question_id: params[:question_id]
         )
-        render json: correct_answer, include: [:question => {only: [:id, :message]}]
+        render json: correct_answer, include: [:question => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def destroy
