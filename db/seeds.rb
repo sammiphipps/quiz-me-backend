@@ -17,10 +17,11 @@ opentdbApis.map do |opentdb|
     data = response["results"]
 
     data.map do |question|
-        if Category.all.include?(question["category"]) == false 
-            category = Category.create(name: question["category"])
-        else 
+
+        if Category.find_by(name: question["category"]) 
             category = Category.find_by(name: question["category"])
+        else 
+            category = Category.create(name: question["category"])
         end 
 
         database_question = Question.create(

@@ -22,7 +22,7 @@ class CategoriesController < ApplicationController
         category.update(
             name: params[:name]
         )
-        render json: category, [:questions => {except: [:category_id, :created_at, :updated_at]}]
+        render json: category, include: [:questions => {except: [:category_id, :created_at, :updated_at]}]
     end 
 
     def destroy 
