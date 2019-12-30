@@ -24,22 +24,30 @@ opentdbApis.map do |opentdb|
             category = Category.create(name: question["category"])
         end 
 
-        database_question = Question.create(
-            answer_type: question["type"],
-            message: question["question"].gsub('&quot;', '"').gsub('&#039;', "'"),
-            category: category
+        questionText = question["question"]
+        if (
+            (questionText.include? "&") === false ||
+            (questionText.include? "& ") === true ||
+            (questionText.include? "&quot") === true ||
+            (questionText.include? "&#039") === true
         )
+            database_question = Question.create(
+                answer_type: question["type"],
+                message: question["question"].gsub("&quot;", '"').gsub("&#039;", "'"),
+                category: category
+            )
 
-        CorrectAnswer.create(
-            message: question["correct_answer"],
-            question: database_question
-        )
-
-        question["incorrect_answers"].map do |incorrect_answer|
-            IncorrectAnswer.create(
-                message: incorrect_answer,
+            CorrectAnswer.create(
+                message: question["correct_answer"],
                 question: database_question
             )
-        end 
+
+            question["incorrect_answers"].map do |incorrect_answer|
+                IncorrectAnswer.create(
+                    message: incorrect_answer,
+                    question: database_question
+                )
+            end 
+        end
     end 
 end 
