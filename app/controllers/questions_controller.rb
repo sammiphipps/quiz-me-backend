@@ -1,12 +1,12 @@
 class QuestionsController < ApplicationController
     def index 
         questions = Question.all
-        render json: questions, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: questions, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def show 
         question = Question.find(params[:id])
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def create 
@@ -16,7 +16,7 @@ class QuestionsController < ApplicationController
             message: params[:message],
             category_id: params[:category_id]
         )
-        render json: question
+        render json: question, except: [:created_at, :updated_at]
     end 
 
     def update 
@@ -27,7 +27,7 @@ class QuestionsController < ApplicationController
             message: params[:message],
             category_id: params[:category_id]
         )
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
     def destroy 
