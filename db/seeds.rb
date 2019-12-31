@@ -26,7 +26,7 @@ opentdbApis.map do |opentdb|
 
         database_question = Question.create(
             answer_type: question["type"],
-            message: question["question"],
+            message: question["question"].gsub('&quot;', '"').gsub('&#039;', "'"),
             category: category
         )
 
