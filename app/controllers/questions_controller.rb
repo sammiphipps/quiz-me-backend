@@ -12,7 +12,6 @@ class QuestionsController < ApplicationController
     def create 
         question = Question.create(
             answer_type: params[:answer_type],
-            difficulty: params[:difficulty],
             message: params[:message],
             category_id: params[:category_id]
         )
@@ -23,7 +22,6 @@ class QuestionsController < ApplicationController
         question = Question.find(params[:id])
         question.update(
             answer_type: params[:answer_type],
-            difficulty: params[:difficulty],
             message: params[:message],
             category_id: params[:category_id]
         )
