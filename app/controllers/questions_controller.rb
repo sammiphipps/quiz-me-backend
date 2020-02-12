@@ -10,11 +10,7 @@ class QuestionsController < ApplicationController
     end 
 
     def create 
-        question = Question.create(
-            answer_type: params[:answer_type],
-            message: params[:message],
-            category_id: params[:category_id]
-        )
+        question = Question.create(question_params)
         render json: question, except: [:created_at, :updated_at]
     end 
 
@@ -32,11 +28,7 @@ class QuestionsController < ApplicationController
 
     def update 
         question = Question.find(params[:id])
-        question.update(
-            answer_type: params[:answer_type],
-            message: params[:message],
-            category_id: params[:category_id]
-        )
+        question.update(question_params)
         render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
     end 
 
