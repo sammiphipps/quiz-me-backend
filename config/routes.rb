@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   resources :questions, except: [:new, :edit]
   resources :correct_answers, except: [:new, :edit]
   resources :incorrect_answers, except: [:new, :edit]
+  post "question-with-answers", to: "questions#create_question_answers"
 end
