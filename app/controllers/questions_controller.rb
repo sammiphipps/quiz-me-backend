@@ -19,15 +19,8 @@ class QuestionsController < ApplicationController
     end 
 
     def create_question_answers
-        question = Question.create(
-            answer_type: params[:question][:answer_type],
-            message: params[:question][:message],
-            category_id: params[:question][:category_id]            
-        )
-        correct_answer = CorrectAnswer.create(
-            message: params[:correct_answer][:message],
-            question_id: question.id
-        )
+        question = Question.create(question_params)
+        correct_answer = CorrectAnswer.create(correct_answer_params.merge(:question_id => question.id))
         params[:incorrect_answers].map do |incorrect_answer|
             IncorrectAnswer.create(
                 message: incorrect_answer[:message],
@@ -41,7 +34,6 @@ class QuestionsController < ApplicationController
         question = Question.find(params[:id])
         question.update(
             answer_type: params[:answer_type],
-            difficulty: params[:difficulty],
             message: params[:message],
             category_id: params[:category_id]
         )
@@ -54,4 +46,13 @@ class QuestionsController < ApplicationController
         render json: {message: "The question has been destroyed.", status: 204}
     end 
 
+    private
+
+    def question_params
+        params.require(:question).permit(:answer_type, :message, :category_id)
+    end 
+
+    def correct_answer_params
+        params.require(:correct_answer).permit(:message)
+    end 
 end
