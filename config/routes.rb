@@ -5,5 +5,9 @@ Rails.application.routes.draw do
   resources :questions, except: [:new, :edit]
   resources :correct_answers, except: [:new, :edit]
   resources :incorrect_answers, except: [:new, :edit]
+  resources :quiz_questions, except: [:new, :edit]
+  resources :quizzes, except: [:new, :edit]
+  resources :test_questions, except: [:new, :edit]
+  resources :tests, except: [:new, :edit]
   post "question-with-answers", to: "questions#create_question_answers"
 end
