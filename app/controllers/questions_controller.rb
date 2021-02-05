@@ -1,17 +1,17 @@
 class QuestionsController < ApplicationController
     def index 
         questions = Question.all
-        render json: questions, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
+        render json: questions, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
     end 
 
     def show 
         question = Question.find(params[:id])
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
+        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
     end 
 
     def create 
         question = Question.create(question_params)
-        render json: question, except: [:created_at, :updated_at]
+        render json: question
     end 
 
     def create_question_answers
@@ -23,13 +23,13 @@ class QuestionsController < ApplicationController
                 question_id: question.id
             )
         end
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
+        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
     end 
 
     def update 
         question = Question.find(params[:id])
         question.update(question_params)
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}], except: [:created_at, :updated_at]
+        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
     end 
 
     def destroy 
