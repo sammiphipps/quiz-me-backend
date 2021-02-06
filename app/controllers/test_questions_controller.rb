@@ -6,8 +6,10 @@ class TestQuestionsController < ApplicationController
                 :test => {only: [:id, :name]}, 
                 :question => {
                     include: [
-                        :category => {except: [:created_at, :updated_at]}], 
-                    except: [:category_id, :created_at, :updated_at]
+                        :correct_answer => {only: [:id, :message]}, 
+                        :incorrect_answers => {only: [:id, :message]}
+                    ], 
+                    except: [:category_id, :created_at, :updated_at, :study_card]
                 }], 
             except: [:test_id, :question_id, :created_at, :updated_at]
     end 
@@ -19,8 +21,10 @@ class TestQuestionsController < ApplicationController
                 :test => {only: [:id, :name]}, 
                 :question => {
                     include: [
-                        :category => {except: [:created_at, :updated_at]}], 
-                    except: [:category_id, :created_at, :updated_at]
+                        :correct_answer => {only: [:id, :message]}, 
+                        :incorrect_answers => {only: [:id, :message]}
+                    ], 
+                    except: [:category_id, :created_at, :updated_at, :study_card]
                 }], 
             except: [:test_id, :question_id, :created_at, :updated_at]
     end 

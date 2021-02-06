@@ -6,8 +6,10 @@ class QuestionsController < ApplicationController
                 :correct_answer => {only: [:id, :message]}, 
                 :incorrect_answers => {only: [:id, :message]}, 
                 :quizzes => {only: [:id, :name]}, 
-                :tests => {only: [:id, :name, :description, :teacher_created]}
-            ]
+                :tests => {only: [:id, :name, :description, :teacher_created]},
+                :category => {only: [:id, :name]}
+            ],
+            except: [:category_id]
     end 
 
     def show 
@@ -17,8 +19,22 @@ class QuestionsController < ApplicationController
                 :correct_answer => {only: [:id, :message]}, 
                 :incorrect_answers => {only: [:id, :message]}, 
                 :quizzes => {only: [:id, :name]}, 
-                :tests => {only: [:id, :name, :description, :teacher_created]}
-            ]
+                :tests => {only: [:id, :name, :description, :teacher_created]},
+                :category => {only: [:id, :name]}
+            ], 
+            except: [:category_id]
+    end 
+
+    def get_study_cards 
+        questions = Question.all
+        study_cards = questions.select {|question| question.study_card == true}
+        render json: study_cards, 
+            include: [
+                :correct_answer => {only: [:id, :message]}, 
+                :incorrect_answers => {only: [:id, :message]},
+                :category => {only: [:id, :name]}
+            ], 
+            except: [:category_id]
     end 
 
     def create 
@@ -48,8 +64,10 @@ class QuestionsController < ApplicationController
         render json: question, 
             include: [
                 :correct_answer => {only: [:id, :message]}, 
-                :incorrect_answers => {only: [:id, :message]}
-            ]
+                :incorrect_answers => {only: [:id, :message]},
+                :category => {only: [:id, :name]}
+            ], 
+            except: [:category_id]
     end 
 
     def destroy 

@@ -9,4 +9,5 @@ Rails.application.routes.draw do
   resources :test_questions, except: [:create, :update, :destory, :new, :edit]
   resources :tests, except: [:create, :update, :destory, :new, :edit]
   post "question-with-answers", to: "questions#create_question_answers"
+  get "study_cards", to: "questions#get_study_cards"
 end

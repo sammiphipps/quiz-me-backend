@@ -2,12 +2,33 @@ class CategoriesController < ApplicationController
     def index 
         categories = Category.all
         #if want to only include certain things in methos to [:questions => {only: [:attribute]}]
-        render json: categories, include: [:questions => {except: [:category_id, :created_at, :updated_at]}], except: [:created_at, :updated_at]
+        render json: categories, 
+            include: [
+                :questions => {
+                    include: [
+                        :correct_answer => {only: [:id, :message]}, 
+                        :incorrect_answers => {only: [:id, :message]}, 
+                        :quizzes => {only: [:id, :name]}, 
+                        :tests => {only: [:id, :name, :description, :teacher_created]}
+                    ],
+                    except: [:category_id, :created_at, :updated_at]}
+                ], 
+            except: [:created_at, :updated_at]
     end 
 
     def show 
         category = Category.find(params[:id])
-        render json: category, include: [:questions => {except: [:category_id, :created_at, :updated_at]}], except: [:created_at, :updated_at]
+        render json: category, 
+            include: [:questions => {
+                include: [
+                    :correct_answer => {only: [:id, :message]}, 
+                    :incorrect_answers => {only: [:id, :message]}, 
+                    :quizzes => {only: [:id, :name]}, 
+                    :tests => {only: [:id, :name, :description, :teacher_created]},
+                ],
+                except: [:category_id, :created_at, :updated_at]
+            }], 
+            except: [:created_at, :updated_at]
     end 
 
     def create 
@@ -22,7 +43,19 @@ class CategoriesController < ApplicationController
         category.update(
             name: params[:name]
         )
-        render json: category, include: [:questions => {except: [:category_id, :created_at, :updated_at]}], except: [:created_at, :updated_at]
+        render json: category, 
+            include: [
+                :questions => {
+                    include: [
+                        :correct_answer => {only: [:id, :message]}, 
+                        :incorrect_answers => {only: [:id, :message]}, 
+                        :quizzes => {only: [:id, :name]}, 
+                        :tests => {only: [:id, :name, :description, :teacher_created]},
+                    ],
+                    except: [:category_id, :created_at, :updated_at]
+                }
+            ], 
+            except: [:created_at, :updated_at]
     end 
 
     def destroy 
