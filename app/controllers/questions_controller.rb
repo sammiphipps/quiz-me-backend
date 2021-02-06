@@ -1,12 +1,24 @@
 class QuestionsController < ApplicationController
     def index 
         questions = Question.all
-        render json: questions, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: questions, 
+            include: [
+                :correct_answer => {only: [:id, :message]}, 
+                :incorrect_answers => {only: [:id, :message]}, 
+                :quizzes => {only: [:id, :name]}, 
+                :tests => {only: [:id, :name, :description, :teacher_created]}
+            ]
     end 
 
     def show 
         question = Question.find(params[:id])
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: question, 
+            include: [
+                :correct_answer => {only: [:id, :message]}, 
+                :incorrect_answers => {only: [:id, :message]}, 
+                :quizzes => {only: [:id, :name]}, 
+                :tests => {only: [:id, :name, :description, :teacher_created]}
+            ]
     end 
 
     def create 
@@ -23,13 +35,21 @@ class QuestionsController < ApplicationController
                 question_id: question.id
             )
         end
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: question, 
+            include: [
+                :correct_answer => {only: [:id, :message]}, 
+                :incorrect_answers => {only: [:id, :message]}
+            ]
     end 
 
     def update 
         question = Question.find(params[:id])
         question.update(question_params)
-        render json: question, include: [:correct_answer => {only: [:id, :message]}, :incorrect_answers => {only: [:id, :message]}]
+        render json: question, 
+            include: [
+                :correct_answer => {only: [:id, :message]}, 
+                :incorrect_answers => {only: [:id, :message]}
+            ]
     end 
 
     def destroy 
