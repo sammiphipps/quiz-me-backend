@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
     def index 
-        questions = Question.all
+        questions = Question.all.sort_by {|question| question.created_at }.reverse
         render json: questions, 
             include: [
                 :correct_answer => {only: [:id, :message]}, 
@@ -27,8 +27,9 @@ class QuestionsController < ApplicationController
 
     def get_study_cards 
         questions = Question.all
-        study_cards = questions.select {|question| question.study_card == true}
-        render json: study_cards, 
+        study_cards = questions.select { |question| question.study_card == true }
+        study_cards_sorted = study_cards.sort_by {|question| question.created_at }.reverse
+        render json: study_cards_sorted, 
             include: [
                 :correct_answer => {only: [:id, :message]}, 
                 :incorrect_answers => {only: [:id, :message]},
