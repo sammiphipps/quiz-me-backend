@@ -13,7 +13,7 @@ class QuizzesController < ApplicationController
 
     def show 
         quiz = Quiz.find(params[:id])
-        render jsson: quiz, 
+        render json: quiz, 
             include: [:questions => {
                 include: [
                     :correct_answer => {only: [:id, :message]}, 
