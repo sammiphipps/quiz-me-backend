@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :questions, except: [:new, :edit]
   resources :correct_answers, except: [:new, :edit]
   resources :incorrect_answers, except: [:new, :edit]
-  resources :quiz_questions, except: [:create, :update, :destroy, :new, :edit]
+  resources :quiz_questions, except: [:update, :destroy, :new, :edit]
   resources :quizzes, except: [:create, :update, :destory, :new, :edit]
   resources :test_questions, except: [:create, :update, :destory, :new, :edit]
   resources :tests, except: [:create, :update, :destory, :new, :edit]
