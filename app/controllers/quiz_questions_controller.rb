@@ -25,6 +25,7 @@ class QuizQuestionsController < ApplicationController
             end 
             
         else
+            #if params contains one question ids 
             question_id = quiz_question_params[:question_id]
             quiz_question = create_single_connection(question_id, quiz_id)
             
@@ -36,7 +37,30 @@ class QuizQuestionsController < ApplicationController
         end 
     end 
 
-    
+    def destroy 
+        quiz_id = quiz_question_params[:quiz_id]
+
+        if quiz_question_params.has_key?(:question_ids)
+            #if params contains multiple question ids 
+            question_ids = JSON.parse(quiz_question_params[:question_ids])
+            question_ids.map do |id|
+                quiz_question = QuizQuesstion.all.select { |q| q.quiz_id === quiz_id && q.question_id === id}
+                quiz_question.destroy
+            end 
+            render json: {message: "The provided questions have been destroyed from the quiz.", status: 204}
+        elsif quiz_question_params.has_key?(:question_id)
+            #if params contains one question id
+            question_id = quiz_question.params[:question_id]
+            quiz_question = QuizQuestion.all.select {|q| q.quiz_id === quiz_id && q.question_id === question_id }
+            quiz_question.destroy
+            render json: {message: "The provided question has been destroyed from the quiz.", status: 204}
+        else 
+            #if id is passed through 
+            quiz_question = QuizQuestion.find(params[:id])
+            quiz_question.destory
+            render json: {message: "The provided quiz question has been destroyed.", status: 204}
+        end 
+    end 
 
     private 
 
@@ -112,4 +136,5 @@ class QuizQuestionsController < ApplicationController
              return quiz_question
         end 
     end 
+ 
 end
