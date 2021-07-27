@@ -16,14 +16,27 @@ class QuizQuestionsController < ApplicationController
         if quiz_question_params.has_key?(:question_ids)
             #if params contains multiple question ids 
             question_ids = JSON.parse(quiz_question_params[:question_ids])
-            connection_info = create_multiple_connections(question_ids, quiz_id)
-            byebug
-
+            quiz_questions = create_multiple_connections(question_ids, quiz_id)
+            
+            if quiz_questions[:not_created].length === question_ids.length
+                already_connected_render(true)
+            else 
+                quiz_question_render(quiz_questions[:created])
+            end 
+            
         else
             question_id = quiz_question_params[:question_id]
-            created = create_single_connection(question_id, quiz_id)
+            quiz_question = create_single_connection(question_id, quiz_id)
+            
+            if quiz_question.nil? 
+                already_connected_render
+            else
+                quiz_question_render(quiz_question) 
+            end 
         end 
     end 
+
+    
 
     private 
 
@@ -43,6 +56,10 @@ class QuizQuestionsController < ApplicationController
                     except: [:category_id, :created_at, :updated_at, :study_card]
                 }], 
             except: [:quiz_id, :question_id, :created_at, :updated_at]
+    end 
+
+    def already_connected_render(multiple = false)
+        render json: { message: "#{ multiple ? 'Questions' : 'Question' } provided are already connected to quiz" }
     end 
 
     def already_exist?(question_id, quiz_id)
@@ -65,14 +82,13 @@ class QuizQuestionsController < ApplicationController
 
         question_ids.each do |id|
             exists = already_exist?(id, quiz_id)
+            if !exists 
+                quiz_question = QuizQuestion.create(
+                    quiz_id: quiz_id, 
+                    question_id: id
+                )
 
-            if !exists
-                create << id 
-
-                # QuizQuestion.create(
-                #     quiz_id: quiz_id,
-                #     question_id: id
-                # )
+                create << quiz_question
             else 
                 unable_create << id
             end 
@@ -82,58 +98,18 @@ class QuizQuestionsController < ApplicationController
             created: create, 
             not_created: unable_create
         }
-
-
-        #     if created.empty? === false & unable_create.empty? === true 
-        #         # everything created
-        #         quiz_questions = QuizQuestion.find(created)
-        #         byebug
-        #         render json: quiz_questions, 
-        #         include: [
-        #             :quiz => {only: [:id, :name]}, 
-        #             :question => {
-        #                 include: [
-        #                     :correct_answer => {only: [:id, :message]}, 
-        #                     :incorrect_answers => {only: [:id, :message]}
-        #                 ], 
-        #                 except: [:category_id, :created_at, :updated_at, :study_card]
-        #             }], 
-        #         except: [:quiz_id, :question_id, :created_at, :updated_at]
-        #     elsif created.empty? === true && unable_create.empty? === false 
-        #         # unable to create anything 
-        #         render json: {message: "Unable to create a connections for questions that have the following ids #{unable_create} to quiz #{quiz_id}"}
-                #     else 
-        #         # mix of created and unable to create 
-        #         quiz_questions = QuizQuestion.find(created)
-        #         byebug
-        #         render :message => "Unable to create a connection for questions that have the following ids #{unable_create} to quiz #{quiz_id}",  :created => quiz_questions, 
-        #         include: [
-        #             :quiz => {only: [:id, :name]}, 
-        #             :question => {
-        #                 include: [
-        #                     :correct_answer => {only: [:id, :message]}, 
-        #                     :incorrect_answers => {only: [:id, :message]}
-        #                 ], 
-        #                 except: [:category_id, :created_at, :updated_at, :study_card]
-        #             }], 
-        #         except: [:quiz_id, :question_id, :created_at, :updated_at]
-        #     end 
     end 
 
     def create_single_connection(question_id, quiz_id)
         exists = already_exist?(question_id, quiz_id)
 
         if !exists
-            p "Quiz Question #{question_id} does not exist; need to create"
+             quiz_question = QuizQuestion.create(
+                 quiz_id: quiz_id, 
+                 question_id: question_id
+             )
 
-            # QuizQuestion.create(
-            #     quiz_id: quiz_id, 
-            #     question_id: question_id
-            # )
-            return true
-        else 
-            p "Quiz Question #{question_id} already exists, do not need to create"
-            return false
+             return quiz_question
         end 
     end 
 end
