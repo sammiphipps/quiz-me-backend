@@ -44,14 +44,14 @@ class QuizQuestionsController < ApplicationController
             #if params contains multiple question ids 
             question_ids = JSON.parse(quiz_question_params[:question_ids])
             question_ids.map do |id|
-                quiz_question = QuizQuesstion.all.select { |q| q.quiz_id === quiz_id && q.question_id === id}[0]
+                quiz_question = QuizQuesstion.find_by(quiz_id: quiz_id, question_id: id)
                 quiz_question.destroy
             end 
             render json: {message: "The provided questions have been destroyed from the quiz.", status: 204}
         elsif quiz_question_params.has_key?(:question_id)
             #if params contains one question id
             question_id = quiz_question_params[:question_id]
-            quiz_question = QuizQuestion.all.select {|q| q.quiz_id === quiz_id && q.question_id === question_id }[0]
+            quiz_question = QuizQuestion.find_by(quiz_id: quiz_id, question_id: question_id)
             quiz_question.destroy
             render json: {message: "The provided question has been destroyed from the quiz.", status: 204}
         else 
