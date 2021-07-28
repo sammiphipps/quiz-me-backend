@@ -10,5 +10,5 @@ Rails.application.routes.draw do
   resources :tests, except: [:create, :update, :destory, :new, :edit]
   post "question-with-answers", to: "questions#create_question_answers"
   get "study_cards", to: "questions#get_study_cards"
-  delete "quiz_questions", to: "quiz_questions#destroy"
+  delete "quiz_questions", to: "quiz_questions#destroy_using_quiz_question_ids"
 end

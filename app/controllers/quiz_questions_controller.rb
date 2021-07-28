@@ -38,6 +38,12 @@ class QuizQuestionsController < ApplicationController
     end 
 
     def destroy 
+        quiz_question = QuizQuestion.find(params[:id])
+        quiz_question.destroy
+        render json: {message: "The provided quiz question has been destroyed."}
+    end 
+
+    def destroy_using_quiz_question_ids
         quiz_id = quiz_question_params[:quiz_id]
 
         if quiz_question_params.has_key?(:question_ids)
@@ -45,21 +51,24 @@ class QuizQuestionsController < ApplicationController
             question_ids = JSON.parse(quiz_question_params[:question_ids])
             question_ids.map do |id|
                 quiz_question = QuizQuesstion.find_by(quiz_id: quiz_id, question_id: id)
-                quiz_question.destroy
+
+                if !quiz_question.nil?
+                    quiz_question.destroy
+                end 
             end 
-            render json: {message: "The provided questions have been destroyed from the quiz.", status: 204}
+            render json: {message: "The provided questions have been destroyed from the quiz."}
         elsif quiz_question_params.has_key?(:question_id)
             #if params contains one question id
             question_id = quiz_question_params[:question_id]
             quiz_question = QuizQuestion.find_by(quiz_id: quiz_id, question_id: question_id)
-            quiz_question.destroy
-            render json: {message: "The provided question has been destroyed from the quiz.", status: 204}
-        else 
-            #if id is passed through 
-            quiz_question = QuizQuestion.find(params[:id])
-            quiz_question.destroy
-            render json: {message: "The provided quiz question has been destroyed.", status: 204}
-        end 
+            
+            if !quiz_question.nil? 
+                quiz_question.destroy
+                render json: {message: "The provided question has been destroyed from the quiz."}
+            else 
+                render json: {error: "The provided question is not currently connected to the quiz"}, status: 404
+            end 
+        end
     end 
 
     private 
