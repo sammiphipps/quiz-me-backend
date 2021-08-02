@@ -77,12 +77,9 @@ class QuizQuestionsController < ApplicationController
         #     end 
         # end
 
-        byebug
-
         question_ids = JSON.parse(quiz_question_params[:question_ids])
         question_ids.map do |id|
             quiz_question = QuizQuestion.find_by(quiz_id: quiz_id, question_id: id)
-            byebug
 
             if !quiz_question.nil?
                 quiz_question.destroy
