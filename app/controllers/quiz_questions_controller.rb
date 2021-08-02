@@ -53,29 +53,39 @@ class QuizQuestionsController < ApplicationController
     def destroy_using_quiz_question_ids
         quiz_id = quiz_question_params[:quiz_id]
 
-        if quiz_question_params.has_key?(:question_ids)
-            #if params contains multiple question ids 
-            question_ids = JSON.parse(quiz_question_params[:question_ids])
-            question_ids.map do |id|
-                quiz_question = QuizQuesstion.find_by(quiz_id: quiz_id, question_id: id)
+        # if quiz_question_params.has_key?(:question_ids)
+        #     #if params contains multiple question ids 
+        #     question_ids = JSON.parse(quiz_question_params[:question_ids])
+        #     question_ids.map do |id|
+        #         quiz_question = QuizQuesstion.find_by(quiz_id: quiz_id, question_id: id)
 
-                if !quiz_question.nil?
-                    quiz_question.destroy
-                end 
-            end 
-            render json: {message: "The provided questions have been destroyed from the quiz."}
-        elsif quiz_question_params.has_key?(:question_id)
-            #if params contains one question id
-            question_id = quiz_question_params[:question_id]
-            quiz_question = QuizQuestion.find_by(quiz_id: quiz_id, question_id: question_id)
+        #         if !quiz_question.nil?
+        #             quiz_question.destroy
+        #         end 
+        #     end 
+        #     render json: {message: "The provided questions have been destroyed from the quiz."}
+        # elsif quiz_question_params.has_key?(:question_id)
+        #     #if params contains one question id
+        #     question_id = quiz_question_params[:question_id]
+        #     quiz_question = QuizQuestion.find_by(quiz_id: quiz_id, question_id: question_id)
             
-            if !quiz_question.nil? 
+        #     if !quiz_question.nil? 
+        #         quiz_question.destroy
+        #         render json: {message: "The provided question has been destroyed from the quiz."}
+        #     else 
+        #         render json: {error: "The provided question is not currently connected to the quiz"}, status: 404
+        #     end 
+        # end
+
+        question_ids = JSON.parse(quiz_question_params[:question_ids])
+        question_ids.map do |id|
+            quiz_question = QuizQuesstion.find_by(quiz_id: quiz_id, question_id: id)
+
+            if !quiz_question.nil?
                 quiz_question.destroy
-                render json: {message: "The provided question has been destroyed from the quiz."}
-            else 
-                render json: {error: "The provided question is not currently connected to the quiz"}, status: 404
             end 
-        end
+        end 
+        render json: {message: "The provided questions have been destroyed from the quiz."}
     end 
 
     private 
