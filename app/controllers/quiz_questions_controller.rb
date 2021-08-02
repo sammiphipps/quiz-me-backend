@@ -12,26 +12,35 @@ class QuizQuestionsController < ApplicationController
     def create 
         quiz_id = quiz_question_params[:quiz_id]
 
-        if quiz_question_params.has_key?(:question_ids)
-            #if params contains multiple question ids 
-            question_ids = JSON.parse(quiz_question_params[:question_ids])
-            quiz_questions = create_multiple_connections(question_ids, quiz_id)
+        # if quiz_question_params.has_key?(:question_ids)
+        #     #if params contains multiple question ids 
+        #     question_ids = JSON.parse(quiz_question_params[:question_ids])
+        #     quiz_questions = create_multiple_connections(question_ids, quiz_id)
 
-            if quiz_questions[:not_created].length === question_ids.length
-                already_connected_render(true)
-            else 
-                quiz_question_render(quiz_questions[:created])
-            end 
-        else
-            #if params contains one question ids 
-            question_id = quiz_question_params[:question_id]
-            quiz_question = create_single_connection(question_id, quiz_id)
+        #     if quiz_questions[:not_created].length === question_ids.length
+        #         already_connected_render(true)
+        #     else 
+        #         quiz_question_render(quiz_questions[:created])
+        #     end 
+        # else
+        #     #if params contains one question ids 
+        #     question_id = quiz_question_params[:question_id]
+        #     quiz_question = create_single_connection(question_id, quiz_id)
             
-            if quiz_question.nil? 
-                already_connected_render
-            else
-                quiz_question_render(quiz_question) 
-            end 
+        #     if quiz_question.nil? 
+        #         already_connected_render
+        #     else
+        #         quiz_question_render(quiz_question) 
+        #     end 
+        # end 
+
+        question_ids = JSON.parse(quiz_question_params[:question_ids])
+        quiz_questions = create_multiple_connections(question_ids, quiz_id)
+
+        if quiz_questions[:not_created].length === question_ids.length
+            already_connected_render(true)
+        else 
+            quiz_question_render(quiz_questions[:created])
         end 
     end 
 
@@ -132,17 +141,17 @@ class QuizQuestionsController < ApplicationController
         }
     end 
 
-    def create_single_connection(question_id, quiz_id)
-        exists = already_exist?(question_id, quiz_id)
+    # def create_single_connection(question_id, quiz_id)
+    #     exists = already_exist?(question_id, quiz_id)
 
-        if !exists
-             quiz_question = QuizQuestion.create(
-                 quiz_id: quiz_id, 
-                 question_id: question_id
-             )
+    #     if !exists
+    #          quiz_question = QuizQuestion.create(
+    #              quiz_id: quiz_id, 
+    #              question_id: question_id
+    #          )
 
-             return quiz_question
-        end 
-    end 
+    #          return quiz_question
+    #     end 
+    # end 
  
 end
